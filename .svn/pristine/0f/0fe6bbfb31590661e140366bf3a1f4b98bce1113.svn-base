@@ -1,0 +1,28 @@
+﻿using ControlApp.Dominio.Interfaces.Repository;
+using ControlApp.Dominio.Interfaces.Services;
+using ControlApp.Dominio.Model;
+using System;
+
+namespace ControlApp.Dominio.Services
+{
+    public class GroupService : ServiceBase<Group>, IGroupService
+    {
+        private readonly IGroupRepository _repositoryGroup;
+
+        public GroupService(IGroupRepository repositoryGroup)
+             : base(repositoryGroup)
+        {
+            _repositoryGroup = repositoryGroup;
+        }
+
+        public void Update(Group obj)
+        {
+            _repositoryGroup.Update(obj);
+        }
+
+        public void Delete(Group obj)
+        {
+            _repositoryGroup.Delete(obj);
+        }
+    }
+}

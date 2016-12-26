@@ -1,0 +1,86 @@
+﻿<!-- Keep all page content within the page-content inset div! -->
+<div ng-controller="addGroupController">
+    <div class="page-content inset">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="well lead tituloHome">Grupos</h1>
+                <div>
+                    <tabset>
+                        <tab heading="Dados" class="col-md-6" select="">
+
+                            <alert ng-repeat="alert in alerts" style="margin: 14px;" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+
+                            <form id="addgroupForm" ng-submit="manageURL()" novalidate="novalidate">
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtNome">Nome</label>
+                                            <input type="text" disable-validation-message="" ng-model="model.Name" class="form-control" id="txtNome" name="txtNome" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="model.Active" id="chkAtivo" value="option1">
+                                                    Ativo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </tab>
+                        <tab heading="Usuários" class="col-md-6" select="">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                      
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                    </tabset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" form="addgroupForm">Cadastrar</button>
+                <button type="button" class="btn btn-primary" back>Voltar</button>
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-danger" ng-click="confirmDelete()" ng-show="hasGroup == true">Excluir</button>
+            </div>
+        </div>
+    </footer>
+
+    <!--MODAL-->
+
+    <script type="text/ng-template" id="deleteModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Exclusão</h3>
+        </div>
+        <div class="modal-body">
+            Deseja mesmo excluir esse grupo?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="delete()" ng-show="isLoading == false">Ok</button>
+            <img src="img/loading.gif" ng-show="isLoading == true" style="padding:0px;margin:0px;height:44px;" class="img-responsive btn" alt="Loading">
+            <button class="btn btn-primary" ng-click="cancelDelete()">Cancel</button>
+        </div>
+    </script>
+</div>

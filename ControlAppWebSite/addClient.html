@@ -1,0 +1,275 @@
+﻿<!-- Keep all page content within the page-content inset div! -->
+<div ng-controller="addClientController">
+    <div class="page-content inset">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="well lead tituloHome">Clientes</h1>
+                <div>
+                    <tabset>
+                        <tab heading="Dados" class="col-md-3" select="selectTab('client')">
+
+                            <alert ng-repeat="alert in alerts" style="margin: 14px;" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+
+                            <form id="addclientForm" ng-submit="manageURL()" novalidate="novalidate">
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtNome">Nome</label>
+                                            <input type="text" disable-validation-message="" ng-model="model.Name" class="form-control" id="txtNome" name="txtNome" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtRazaoSocial">Razão Social</label>
+                                            <input type="text" disable-validation-message="" ng-model="model.SocialReazon" class="form-control" id="txtRazaoSocial" name="txtRazaoSocial" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtSigla">Sigla</label>
+                                            <input type="text" disable-validation-message="" style="text-transform: uppercase;" ng-disabled="model.disabled" ng-model="model.Acronym" class="form-control" id="txtSigla" name="txtSigla" ng-minlength="3"
+                                                   ng-maxlength="3" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="model.Active" id="chkAtivo" value="option1">
+                                                    Ativo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </tab>
+                        <tab heading="Aplicações" class="col-md-3" select="">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <alert ng-repeat="alert in alertsApplication" style="margin: 14px;" type="{{alert.type}}">{{alert.msg}}</alert>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <form id="addApplicationForm">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <ui-select multiple ng-model="model.Applications" on-select="changeGridApplication($item, $model)" on-remove="changeGridApplication($item, $model)">
+                                                <ui-select-match placeholder="Selecione as aplicações que deseja adicionar">
+                                                    {{$item.Name}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in applications | propsFilter: {Name: $select.search}">
+                                                    <div ng-bind-html="item.Name | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-condensed" ng-show="model.Applications.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Ativo</th>
+                                                    <th>Grupos</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in pagedApplication.applications">
+                                                    <td>{{item.Name}}</td>
+                                                    <td>{{item.Active ? 'Sim' : 'Não'}}</td>
+                                                    <td class="text-center"><button type="button" class="btn btn-sm btn-primary" ng-click="manageApplicationGroups(item)">Gerenciar</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <pagination ng-show="model.Applications.length > 0" ng-change="changePaginationApplication()" total-items="model.Applications.length" ng-model="currentPageApplication" items-per-page="5" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                        <tab heading="Grupos" class="col-md-2" active="groupsActive" deselect="changeGroupActiveTab()" disabled="groupsDisabled">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <alert ng-repeat="alert in alertsGroup" style="margin: 14px;" type="{{alert.type}}" close="closeAlertGroups($index)">{{alert.msg}}</alert>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Grupos da Aplicação: {{contextApplication.Name}}</h4>
+                                    <hr />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <form id="addApplicationGroup" novalidate="novalidate" ng-submit="addApplicationGroup()">
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-th-large"></i></span>
+                                            <input type="text" class="form-control" ng-model="View.groupName" placeholder="Digite o nome do grupo" required="required" disable-validation-message="">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary" form="addApplicationGroup">Adicionar</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-condensed" ng-show="contextGroups.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Ativo</th>
+                                                    <th>Usuários</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in pagedGroup.groups">
+                                                    <td>{{item.Name}}</td>
+                                                    <td>{{item.Active ? 'Sim' : 'Não'}}</td>
+                                                    <td class="text-center"><button type="button" class="btn btn-sm btn-primary" ng-click="manageGroupUsers(item)">Gerenciar</button></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <pagination ng-show="contextGroups.length > 0" ng-change="changePaginationGroups()" total-items="contextGroups.length" ng-model="currentPageGroup" items-per-page="5" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                        <tab heading="Usuários" class="col-md-2" select="" active="usersActive" disabled="usersDisabled" deselect="changeUsersActiveTab()">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <alert ng-repeat="alert in alertsUser" style="margin: 14px;" type="{{alert.type}}">{{alert.msg}}</alert>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Usuários do Grupo: {{contextGroup.Name}}</h4>
+                                    <hr />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <form id="addUserForm">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <ui-select multiple ng-model="contextUsers" on-select="changeGridUser($item, $model)" on-remove="changeGridUser($item, $model)">
+                                                <ui-select-match placeholder="Selecione os usuários que deseja adicionar ao grupo">
+                                                    {{$item.Login}}
+                                                </ui-select-match>
+                                                <ui-select-choices repeat="item in AllUsers | propsFilter: {Name: $select.search}">
+                                                    <div ng-bind-html="item.Name | highlight: $select.search"></div>
+                                                    <small>
+                                                        Login: {{item.Login}}
+                                                    </small>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Permissões do Grupo: {{contextGroup.Name}}</h4>
+                                    <hr />
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-condensed">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Leitura</th>
+                                                    <th>Escrita</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in contextApplication.Permissions">
+                                                    <td>{{item.Name}}</td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="item.Read">
+                                                                Leitura
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="checkbox">
+                                                            <label>
+                                                                <input type="checkbox" ng-model="item.Write">
+                                                                Escrita
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <pagination ng-show="contextGroups.length > 0" ng-change="changePaginationGroups()" total-items="contextGroups.length" ng-model="currentPageGroup" items-per-page="5" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                        <tab heading="Permissões" class="col-md-2" select="" active="permissionsActive" disabled="permissionsDisabled">
+                            Permissões do grupo
+                        </tab>
+                    </tabset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" form="addclientForm">Gravar</button>
+                <button type="button" class="btn btn-primary" back>Voltar</button>
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-danger" ng-click="confirmDelete()" ng-show="hasClient == true">Excluir</button>
+            </div>
+        </div>
+    </footer>
+
+    <!--MODAL-->
+
+    <script type="text/ng-template" id="deleteModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Exclusão</h3>
+        </div>
+        <div class="modal-body">
+            Deseja mesmo excluir esse usuário?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="delete()" ng-show="isLoading == false">Ok</button>
+            <img src="img/loading.gif" ng-show="isLoading == true" style="padding:0px;margin:0px;height:44px;" class="img-responsive btn" alt="Loading">
+            <button class="btn btn-primary" ng-click="cancelDelete()">Cancel</button>
+        </div>
+    </script>
+</div>

@@ -1,0 +1,66 @@
+﻿<!-- Keep all page content within the page-content inset div! -->
+<div class="page-content inset" ng-controller="usersController">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="well lead tituloHome">Usuários</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <form id="buscarUsuario" novalidate="novalidate" ng-submit="searchUser()">
+                <div class="form-group input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                    <input type="text" class="form-control" ng-model="filter" name="search" id="search" placeholder="Digite o nome de usuário ou login" required="required" disable-validation-message="">
+                </div>
+            </form>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary" form="buscarUsuario">Buscar</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <alert ng-repeat="alert in alerts" style="margin: 14px;" type="{{alert.type}}">{{alert.msg}}</alert>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped table-condensed" ng-show="hasResults == true">
+                    <thead>
+                        <tr>
+                            <th>Login</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Ativo</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in paged.users | filter:{Login: filter }">
+                            <td>{{item.Login}}</td>
+                            <td>{{item.Name}}</td>
+                            <td>{{item.Email}}</td>
+                            <td>{{item.Active ? 'Sim' : 'Não'}}</td>
+                            <td class="text-center"><button type="button" ng-click="editUser(item.Login)" class="btn btn-sm btn-primary">Editar</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination ng-show="hasResults == true" ng-change="changePagination()" total-items="users.length" ng-model="currentPage" items-per-page="5" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+               
+            </div>
+            
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br/>
+<footer>
+    <div class="row">
+        <div class="col-sm-4">
+            <a class="btn btn-primary" ui-sref="home.addUser">Cadastrar</a>
+            <button type="button" class="btn btn-primary" back>Voltar</button>
+        </div>
+        <div class="col-sm-8">
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,10 @@
+﻿.test {
+  
+}
+&.ng-enter {
+    animation: fadeIn 1s;
+}
+
+&.ng-leave {
+  animation: fadeOut 1s;
+}

@@ -1,0 +1,113 @@
+﻿<!-- Keep all page content within the page-content inset div! -->
+<div ng-controller="addUserController">
+    <div class="page-content inset">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="well lead tituloHome">Usuários</h1>
+                <div>
+                    <tabset>
+                        <tab heading="Dados" class="col-md-6" select="">
+
+                            <alert ng-repeat="alert in alerts" style="margin: 14px;" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+
+                            <form id="adduserForm" ng-submit="manageURL()" novalidate="novalidate">
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtNome">Nome</label>
+                                            <input type="text" disable-validation-message="" ng-model="model.Name" class="form-control" id="txtNome" name="txtNome" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtLogin">Login</label>
+                                            <input type="text" disable-validation-message="" ng-model="model.Login" class="form-control" id="txtLogin" name="txtLogin" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtEmail">Email</label>
+                                            <input type="email" disable-validation-message="" ng-model="model.Email" class="form-control" id="txtEmail" name="txtEmail" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtSenha">Senha</label>
+                                            <input type="password" disable-validation-message="" ng-model="model.Password" class="form-control" id="txtSenha" name="txtSenha" ng-minlength="6"
+                                                   ng-maxlength="20" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtConfirmacao">Confirmação de Senha</label>
+                                            <input type="password" disable-validation-message="" ng-model="model.ConfirmPassword" mustcontainword="{{model.Password }}" class="form-control" id="txtConfirmacao" name="txtConfirmacao" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="model.Active" id="chkAtivo" value="option1">
+                                                    Ativo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </tab>
+                        <tab heading="Grupos" class="col-md-6" select="">
+                            Grupos
+                        </tab>
+                    </tabset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" form="adduserForm">Cadastrar</button>
+                <button type="button" class="btn btn-primary" back>Voltar</button>
+            </div>
+            <div class="col-sm-4">
+               
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-danger" ng-click="confirmDelete()" ng-show="hasUser == true">Excluir</button>
+            </div>
+        </div>
+    </footer>
+
+    <!--MODAL-->
+
+    <script type="text/ng-template" id="deleteModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Exclusão</h3>
+        </div>
+        <div class="modal-body">
+            Deseja mesmo excluir esse usuário?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="delete()" ng-show="isLoading == false">Ok</button>
+            <img src="img/loading.gif" ng-show="isLoading == true" style="padding:0px;margin:0px;height:44px;" class="img-responsive btn" alt="Loading">
+            <button class="btn btn-primary" ng-click="cancelDelete()">Cancel</button>
+        </div>
+    </script>
+</div>

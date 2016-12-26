@@ -1,0 +1,11 @@
+﻿using ControlApp.Dominio.Model;
+
+namespace ControlApp.Dominio.Interfaces.Services
+{
+    public interface IGroupService : IServiceBase<Group>
+    {
+        void Update(Group obj);
+
+        void Delete(Group obj);
+    }
+}

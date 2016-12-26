@@ -1,0 +1,45 @@
+﻿using ControlApp.Dominio.Interfaces.Repository;
+using ControlApp.Dominio.Model;
+using MongoDB.Data.Contexto;
+using MongoDB.Driver;
+using MongoDB.Driver.Builders;
+using System;
+
+namespace ControlApp.Infraestrutura.Data.Repository
+{
+    public class UserRepository : RepositoryBase<User>, IUserRepository
+    {
+
+        public void Update(User obj)
+        {
+            using (MongoDBContext ctx = new MongoDBContext(config))
+            {
+                UpdateBuilder update = new UpdateBuilder();
+                update.Set("Name", obj.Name);
+                update.Set("Login", obj.Login);
+                update.Set("Email", obj.Email);
+                update.Set("Password", obj.Password);
+                update.Set("Active", obj.Active);
+
+                ctx.Collection<User>().Update(Query.EQ("Login", obj.Login), update, UpdateFlags.None);
+            }
+        }
+
+        public void Delete(User obj)
+        {
+            using (MongoDBContext ctx = new MongoDBContext(config))
+            {
+                ctx.Collection<User>().Remove(Query.EQ("Login",obj.Login));
+            }
+        }
+
+        public User Authenticate(User obj)
+        {
+            using (MongoDBContext ctx = new MongoDBContext(config))
+            {
+                var query = Query.And(Query.EQ("Login", obj.Login), Query.EQ("Password", obj.Password));
+                return ctx.Collection<User>().FindOneAs<User>(query);    
+            }
+        }
+    }
+}

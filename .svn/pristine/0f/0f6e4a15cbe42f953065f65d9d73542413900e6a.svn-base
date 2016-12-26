@@ -1,0 +1,30 @@
+﻿using ControlApp.Application.Interfaces;
+using ControlApp.DependencyResolver;
+using ControlApp.Dominio.Interfaces.Services;
+using ControlApp.Dominio.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace ControlAppTest
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var userService = (IUserAppService)new DependencyInjectionResolver().GetInstance<IUserAppService>();
+
+            User u = new User()
+            {
+                Name="Sergio",
+                Login="sergio.santos",
+                Password = "123",
+                Active = true
+            };
+
+            userService.Add(u);
+
+        }
+    }
+}

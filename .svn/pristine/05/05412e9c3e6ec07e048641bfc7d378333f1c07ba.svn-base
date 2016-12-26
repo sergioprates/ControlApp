@@ -1,0 +1,27 @@
+﻿using ControlApp.Dominio.Interfaces.Repository;
+using ControlApp.Dominio.Interfaces.Services;
+using ControlApp.Dominio.Model;
+
+namespace ControlApp.Dominio.Services
+{
+    public class ClientService : ServiceBase<Client>, IClientService
+    {
+        private readonly IClientRepository _repositoryClient;
+
+        public ClientService(IClientRepository repositoryClient)
+            : base(repositoryClient)
+        {
+            _repositoryClient = repositoryClient;
+        }
+
+        public void Update(Client obj)
+        {
+            _repositoryClient.Update(obj);
+        }
+
+        public void Delete(Client obj)
+        {
+            _repositoryClient.Delete(obj);
+        }
+    }
+}

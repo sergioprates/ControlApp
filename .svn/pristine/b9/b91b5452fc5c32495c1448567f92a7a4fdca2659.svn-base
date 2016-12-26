@@ -1,0 +1,28 @@
+﻿using ControlApp.Application.Interfaces;
+using ControlApp.Dominio.Interfaces.Services;
+using ControlApp.Dominio.Model;
+using System;
+
+namespace ControlApp.Application
+{
+    public class ClientAppService : AppServiceBase<Client>, IClientAppService
+    {
+        private readonly IClientService _service;
+
+        public ClientAppService(IClientService service)
+             :base(service)
+        {
+            _service = service;
+        }
+
+         public void Update(Client obj)
+        {
+            _service.Update(obj);
+        }
+
+         public void Delete(Client obj)
+        {
+            _service.Delete(obj);
+        }
+    }
+}

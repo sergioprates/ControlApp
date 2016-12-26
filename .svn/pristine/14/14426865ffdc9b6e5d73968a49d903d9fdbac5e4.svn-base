@@ -1,0 +1,28 @@
+﻿using ControlApp.Dominio.Interfaces.Repository;
+using ControlApp.Dominio.Interfaces.Services;
+using ControlApp.Dominio.Model;
+using System;
+
+namespace ControlApp.Dominio.Services
+{
+    public class ApplicationService : ServiceBase<Application>, IApplicationService
+    {
+         private readonly IApplicationRepository _repositoryApplication;
+
+         public ApplicationService(IApplicationRepository repositoryApplication)
+             : base(repositoryApplication)
+        {
+            _repositoryApplication = repositoryApplication;
+        }
+
+        public void Update(Application obj)
+        {
+            _repositoryApplication.Update(obj);
+        }
+
+        public void Delete(Application obj)
+        {
+            _repositoryApplication.Delete(obj);
+        }
+    }
+}

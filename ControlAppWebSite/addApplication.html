@@ -1,0 +1,147 @@
+﻿<!-- Keep all page content within the page-content inset div! -->
+<div ng-controller="addApplicationController">
+    <div class="page-content inset">
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="well lead tituloHome">Aplicações</h1>
+                <div>
+                    <tabset>
+                        <tab heading="Dados" class="col-md-6" select="">
+
+                            <alert ng-repeat="alert in alerts" style="margin: 14px;" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+
+                            <form id="addapplicationForm" ng-submit="manageURL()" novalidate="novalidate">
+                                <br />
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtNome">Nome</label>
+                                            <input type="text" disable-validation-message="" ng-model="model.Name" class="form-control" id="txtNome" name="txtNome" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label" for="txtDescription">Descrição</label>
+                                            <textarea id="txtDescription" name="txtDescription" class="form-control" ng-model="model.Description" rows="3" disable-validation-message="" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="model.Active" id="chkAtivo" value="option1">
+                                                    Ativo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <br />
+                            <br />
+                            <br />
+                            <br />
+                        </tab>
+                        <tab heading="Permissões" class="col-md-6" select="">
+                            <br />
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <alert ng-repeat="alert in alertsPermissions" style="margin: 14px;" type="{{alert.type}}" close="closeAlertPermissions($index)">{{alert.msg}}</alert>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4>Permissões da Aplicação: {{model.Name}}</h4>
+                                    <hr />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <form id="addApplicationPermission" novalidate="novalidate" ng-submit="addApplicationPermission()">
+                                        <div class="form-group input-group">
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-knight"></i></span>
+                                            <input type="text" class="form-control" ng-model="View.Permission.Name" placeholder="Digite o nome da permissão" required="required" disable-validation-message="">
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-model="View.Permission.Active" id="chkAtivo" value="option1">
+                                                    Ativo
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary" form="addApplicationPermission">Adicionar</button>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-condensed" ng-show="model.Permissions.length > 0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Feature</th>
+                                                    <th>Ativo</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr ng-repeat="item in pagedPermission.permissions">
+                                                    <td>{{item.Name}}</td>
+                                                    <td>{{item.Feature}}</td>
+                                                    <td>{{item.Active ? 'Sim' : 'Não'}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <pagination ng-show="model.Permissions.length > 0" ng-change="changePaginationPermission()" total-items="model.Permissions.length" ng-model="currentPagePermission" items-per-page="5" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab>
+                    </tabset>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="row">
+            <div class="col-sm-4">
+                <button type="submit" class="btn btn-primary" form="addapplicationForm">Cadastrar</button>
+                <button type="button" class="btn btn-primary" back>Voltar</button>
+            </div>
+            <div class="col-sm-4">
+
+            </div>
+            <div class="col-sm-4">
+                <button type="button" class="btn btn-danger" ng-click="confirmDelete()" ng-show="hasApplication == true">Excluir</button>
+            </div>
+        </div>
+    </footer>
+
+    <!--MODAL-->
+
+    <script type="text/ng-template" id="deleteModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Exclusão</h3>
+        </div>
+        <div class="modal-body">
+            Deseja mesmo excluir essa aplicação?
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" ng-click="delete()" ng-show="isLoading == false">Ok</button>
+            <img src="img/loading.gif" ng-show="isLoading == true" style="padding:0px;margin:0px;height:44px;" class="img-responsive btn" alt="Loading">
+            <button class="btn btn-primary" ng-click="cancelDelete()">Cancel</button>
+        </div>
+    </script>
+</div>

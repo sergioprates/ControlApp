@@ -1,0 +1,16 @@
+﻿using ControlApp.Dominio.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ControlApp.Dominio.Interfaces.Repository
+{
+    public interface IClientRepository : IRepositoryBase<Client>
+    {
+        void Update(Client obj);
+
+        void Delete(Client obj);
+    }
+}

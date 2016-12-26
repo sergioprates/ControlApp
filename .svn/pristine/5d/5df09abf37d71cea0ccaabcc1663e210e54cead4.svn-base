@@ -1,0 +1,33 @@
+﻿using ControlApp.Application.Interfaces;
+using ControlApp.Dominio.Interfaces.Services;
+using ControlApp.Dominio.Model;
+using System;
+
+namespace ControlApp.Application
+{
+    public class UserAppService : AppServiceBase<User>, IUserAppService
+    {
+         private readonly IUserService _service;
+
+         public UserAppService(IUserService service)
+             :base(service)
+        {
+            _service = service;
+        }
+
+        public void Update(User obj)
+        {
+            _service.Update(obj);
+        }
+
+        public void Delete(User obj)
+        {
+            _service.Delete(obj);
+        }
+
+        public User Authenticate(User obj)
+        {
+            return _service.Authenticate(obj);
+        }
+    }
+}
